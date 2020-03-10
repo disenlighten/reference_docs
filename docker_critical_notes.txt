@@ -1,0 +1,38 @@
+docker critical notes
+
+# build the image test with the tag latest
+docker build -t test:latest -t 
+
+# shows what you have locally
+docker images 
+
+# run the container
+docker run -it test:latest 
+
+# read logs?
+docker log test -f 
+
+
+# run a command in a container
+docker container run -it ubuntu:latest /bin/bash
+
+
+# build a container
+# The period (.) at the end of the command tells Docker to use the shell’s current working directory as the build context.
+
+docker image build -t test:latest .
+
+# pull an image
+docker image pull ubuntu:latest
+
+# 
+docker container ls
+
+# 
+docker image history
+
+# 
+docker image inspect 
+
+
+
