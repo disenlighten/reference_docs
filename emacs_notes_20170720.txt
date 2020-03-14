@@ -1,34 +1,34 @@
-Emacs notes July 20, 2017
+#+TITLE Emacs notes July 20, 2017
 
 ### Set up
 Had to set in iterm2 - profile -> keys - option key act as Esc+
 
 ### How to do I do my favorite vi tricks?
 * Motion
-** Backward, C-b
-** Forward, C-f
-** Next line, C-n
-** End of Doc -- Shift-G --  M->
-** Beginning of a Doc - M-<
-** Go to a line # -- : -- M-g M-g
-** End of Line -- $ -- C-e
-** Beginning of Line -- ^ -- C-a
-** Previous line, k -- C-p
-** Back a word -- b --   M-b
-** Forward a word -- f --   M-f
-** Move five words forward -- 5w -- C-u 5 M-f OR (better) M-5 M-f (hold down option and type the #)
+- Backward :: C-b
+- Forward :: C-f
+- Next line :: C-n
+- End of Doc :: Shift-G ->  M->
+- Beginning of a Doc ::  M-<
+- Go to a line # :: : -> M-g M-g
+- End of Line :: $ ->  C-e
+- Beginning of Line :: ^ -> C-a
+- Previous line :: k -> C-p
+- Back a word :: b ->   M-b
+- Forward a word :: f ->   M-f
+- Move five words forward :: 5w -> C-u 5 M-f OR (better) M-5 M-f (hold down option and type the #)
 * Editing
-** Delete a word -- dw -- M-d
-** Yank lines (means a different thing in Emacs)-- yy -- C-k
-** Delete the next character after the cursor (the DEL key) -- x -- C-d
-** Kill the  word immediately before the cursor -- dw --  M-<delete>  
-** Kill the next word after the cursor --  M-d
-** Kill from the cursor position to end of line -- d$, yy -- C-k          
-** Kill to the end of the current sentence - 	M-k  
-** kill everything between 2 positions  -- C-w       
-** paste killed text ("Yank" in emacs parlance") -- p -- C-y 
-** Kill 5 lines - 5dd - C-u 5 C-k
-** Paste the previous kill - M-y
+- Delete a word :: dw -> M-d
+- Yank lines (means a different thing in Emacs) ::  yy -> C-k
+- Delete the next character after the cursor (the DEL key) :: x -> C-d
+- Kill the word immediately before the cursor :: dw ->  M-<delete>  
+- Kill the next word after the cursor ::  M-d
+- Kill from the cursor position to end of line :: d$, yy -> C-k          
+- Kill to the end of the current sentence :: M-k  
+- Kill everything between 2 positions  :: C-w       
+- {aste killed text ("Yank" in emacs parlance") :: p -> C-y 
+- Kill 5 lines :: 5dd -> C-u 5 C-k
+- Paste the previous kill :: M-y
 * Meta
 - Undo :: u -> C-x u
 - Quit out of a command in progress :: C-g
@@ -46,64 +46,59 @@ Had to set in iterm2 - profile -> keys - option key act as Esc+
 
 - run a shell command on a region - C-u M-| 
 * Org mode Specific
-** Start Org Mode -- M-x org-mode
-** Create a TODO -- add the TODO keyword in a headline
-** Solve a TODO item  -- C-c C-t
-** Create a heading -- M-shift-RET  
-** Create a link -- [[link][description]]
-** Open at point -- C-c C-o
-** Collapse to heading -- shift-Tab
-** Expand a heading - Tab
-** M-up/down – move a headline up or down
-** M-left/right – promote or demote a headline
+- Start Org Mode :: M-x org-mode
+- Create a TODO :: add the TODO keyword in a headline
+- Solve a TODO item  :: C-c C-t
+- Create a heading :: M-shift-RET  
+- Create a link :: [[link][description]]
+- Open at point :: C-c C-o
+- Collapse to heading :: shift-Tab
+- Expand a heading :: Tab
+- M-up/down :: move a headline up or down
+- M-left/right :: promote or demote a headline
 ** Fonts: 
-** *bold*
-** /italic/
-** _underlined_
-** =code=
-** ~verbatim~
-** +strike-through+
+- *bold*
+- /italic/
+- _underlined_
+- =code=
+- ~verbatim~
+- +strike-through+
 
 * BASH-specific
-** Backward -- C-b
-** Forward -- C-f
-** Next line -- C-n
-** End of Line -- C-e
-** Beginning of Line -- C-a
-** Previous line -- C-p
-** Back a word -- M-b
-** Forward a word --  M-f
-** Delete back 1 word - M-DEL
-** Delete forward 1 word - M-D
-** Reverse search - C-r
-** Kill from the cursor position to end of line -- C-k 
+- Backward :: C-b
+- Forward :: C-f
+- Next line :: C-n
+- End of Line :: C-e
+- Beginning of Line :: C-a
+- Previous line :: C-p
+- Back a word :: M-b
+- Forward a word ::  M-f
+- Delete back 1 word :: M-DEL
+- Delete forward 1 word :: M-D
+- Reverse search :: C-r
+- Kill from the cursor position to end of line :: C-k 
 
 Notes from 1/19:
 C-x C-f - File browser (tab autocompletes)
 
 Open a new window: 
-C-x 0 - Close out the active pane
-C-x 1 - make the current pane the main one
-C-x 2 - new pane horizontal
-C-x 3 - new pane vertical
-C-x o - move to the next pane
+- C-x 0 :: Close out the active pane
+- C-x 1 :: make the current pane the main one
+- C-x 2 :: new pane horizontal
+- C-x 3 :: new pane vertical
+- C-x o :: move to the next pane
 
-C-k - copy (kill it, then paste it twice)
-C-/ - undo (works in terminal)
+- C-k :: copy (kill it, then paste it twice)
+- C-/ :: undo (works in terminal)
 
-C-S-c C-S-c - Multiple cursors -> (ctrl+shift+c x2)
+- C-S-c C-S-c - Multiple cursors :: (ctrl+shift+c x2)
 
-Buffers - 
-C-x b - make a buffer/ switch between buffers
-C-x k - destory a buffer
+* Buffers  
+- C-x b :: make a buffer/ switch between buffers
+- C-x k :: destory a buffer
 
-C-[space] - set mark
-M-x sort-lines - sort your selected
-M-x align-regex - align according to a pattern
+- C-[space] :: set mark
+- M-x sort-lines :: sort your selected
+- M-x align-regex :: align according to a pattern
 
-Ideas for plugins: 
-helm
-syntax highlighting - yaml-mode
-line numbering - linum (built-in)
 
-tab on a line - will auto-indent
