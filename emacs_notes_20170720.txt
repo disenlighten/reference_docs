@@ -43,14 +43,13 @@ Had to set in iterm2 - profile -> keys - option key act as Esc+
 - Save the file :: w -> C-x C-s 
 - Save the current buffer with a specified file name (write-file) ::  C-x C-w 
 - List buffers :: C-x C-b
-
-- run a shell command on a region - C-u M-| 
+- run a shell command on a region :: C-u M-| 
 * Org mode Specific
 - Start Org Mode :: M-x org-mode
 - Create a TODO :: add the TODO keyword in a headline
 - Solve a TODO item  :: C-c C-t
 - Create a heading :: M-shift-RET  
-- Create a link :: [[link][description]]
+- Create a link :: [[https://orgmode.org/guide/Hyperlinks.html][Org Mode Hyperlinks]]
 - Open at point :: C-c C-o
 - Collapse to heading :: shift-Tab
 - Expand a heading :: Tab
