@@ -1,0 +1,11 @@
+#Set terminal prompt from exprompt.net
+export PS1="\[\e[33m\][\[\e[m\]\[\e[32m\]\u\[\e[m\]\[\e[33m\]@\[\e[m\]\[\e[36m\]\h\[\e[m\]: \[\e[95m\]\w\[\e[m\]\[\e[33m\]]\[\e[m\]\[\e[35m\]\\$\[\e[m\] "
+#Color terminal
+export CLICOLOR=1
+#Color Grep output
+export GREP_OPTIONS='--color=auto'
+#enables color for iTerm
+export TERM=xterm-color
+#enable scrolling with arrow keys
+bind '"\e[A":history-search-backward'
+bind '"\e[B":history-search-forward'

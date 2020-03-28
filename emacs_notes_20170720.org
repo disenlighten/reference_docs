@@ -44,6 +44,11 @@ Had to set in iterm2 - profile -> keys - option key act as Esc+
 - Save the current buffer with a specified file name (write-file) ::  C-x C-w 
 - List buffers :: C-x C-b
 - run a shell command on a region :: C-u M-| 
+- Kill a buffer :: C-x 
+- Find and replace :: M-% (! for replace all) 
+* Dired
+- Enter dired :: C-x d
+- Toggle to edit mode :: C-x C-q
 * Org mode Specific
 - Start Org Mode :: M-x org-mode
 - Create a TODO :: add the TODO keyword in a headline
