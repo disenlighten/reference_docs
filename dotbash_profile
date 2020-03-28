@@ -9,3 +9,5 @@ export TERM=xterm-color
 #enable scrolling with arrow keys
 bind '"\e[A":history-search-backward'
 bind '"\e[B":history-search-forward'
+# Custom lscolors
+LSCOLORS=exfxcxdxbxegedabagacad
