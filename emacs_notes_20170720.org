@@ -26,9 +26,10 @@ Had to set in iterm2 - profile -> keys - option key act as Esc+
 - Kill from the cursor position to end of line :: d$, yy -> C-k          
 - Kill to the end of the current sentence :: M-k  
 - Kill everything between 2 positions  :: C-w       
-- {aste killed text ("Yank" in emacs parlance") :: p -> C-y 
+- Paste killed text ("Yank" in emacs parlance") :: p -> C-y 
 - Kill 5 lines :: 5dd -> C-u 5 C-k
 - Paste the previous kill :: M-y
+- Delete whole line from anywhere in line :: C-D 
 * Meta
 - Undo :: u -> C-x u
 - Quit out of a command in progress :: C-g
@@ -46,6 +47,7 @@ Had to set in iterm2 - profile -> keys - option key act as Esc+
 - run a shell command on a region :: C-u M-| 
 - Kill a buffer :: C-x 
 - Find and replace :: M-% (! for replace all) 
+- iElm - repeat command from history :: M-P
 * Dired
 - Enter dired :: C-x d
 - Toggle to edit mode :: C-x C-q
