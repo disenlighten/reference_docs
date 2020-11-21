@@ -1,7 +1,7 @@
 docker critical notes
 
 # build the image test with the tag latest
-docker build -t test:latest -t 
+docker build -t test:latest .
 
 # shows what you have locally
 docker images 
