@@ -1,0 +1,8 @@
+* Python
+** Create a venv
+#+begin_src 
+python3 -m venv venv
+#+end_src
+
+** Install packages from requirements.txt
+pip install --no-cache-dir -r requirements.txt
