@@ -1,0 +1,3 @@
+* Essentials
+- Multiple cursors ::  M-S-drag
+- Add a cursor to a location :: M-click
