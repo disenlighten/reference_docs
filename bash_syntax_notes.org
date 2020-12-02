@@ -1,3 +1,7 @@
+* Questions to answer
+** TODO What is the < in the sed command?
+** TODO document optoins for set
+** 
 * env shebang
 #!/usr/bin/env bash
 
@@ -100,7 +104,26 @@ else
 fi
 #+end_src
 
-
 * set
 set -eu
 
+* Defining a function
+#+begin_src 
+probe() ( 
+    ping -qnc2 www.google.com | \
+        grep round-trip && \ 
+        date +"OK %D %T"
+    )
+#+end_src
+* Answer to the sed puzzle
+#+begin_src 
+[james@Jamess-MBP: ~]$ cat ~/test/sample.data
+102
+071
+210
+153
+
+while read X;
+    do SUM+=$X; 
+done < <(gsed -e 's/^0//'  sample.data)
+#+end_src
