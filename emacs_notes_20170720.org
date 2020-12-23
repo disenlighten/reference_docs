@@ -62,6 +62,7 @@ Had to set in iterm2 - profile -> keys - option key act as Esc+
 - Expand a heading :: Tab
 - M-up/down :: move a headline up or down
 - M-left/right :: promote or demote a headline
+- C-c C-, :: Shortcut to create code and other blocks
 ** Fonts: 
 - *bold*
 - /italic/
