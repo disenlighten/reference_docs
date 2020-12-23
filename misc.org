@@ -6,3 +6,28 @@ python3 -m venv venv
 
 ** Install packages from requirements.txt
 pip install --no-cache-dir -r requirements.txt
+
+* Backup
+** cpx
+#+begin_src 
+rsync -av ~/mu-code/$1 /run/media/jamiep/CIRCUITPY/code.py  
+#+end_src
+
+** labs
+#+begin_src 
+rsync -av ~/repos/rhcsa8env/lab_docs/ ~/labback                                 
+rsync -av ~/repos/rhcsa8env/roles ~/labback                                     
+rsync -av ~/repos/rhcsa8env/playbooks/autofs_lab.yml ~/labback                  
+rsync -av ~/repos/rhcsa8env/templates ~/labback   
+#+end_src
+
+** tcc wiki
+#+begin_src 
+rsync -av -e ssh 10.0.0.42:/var/lib/ikiwiki/yangtaichichuan/* ~/repos/yangtaich\
+iwiki/  
+#+end_src
+
+** gameshell
+#+begin_src 
+rsync -av -e ssh cpi@192.168.196.207:/home/cpi/games ~/gameshell/
+#+end_src
