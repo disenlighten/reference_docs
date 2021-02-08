@@ -1,17 +1,21 @@
 * Questions to answer
 ** TODO What is the < in the sed command?
 ** TODO document optoins for set
-** 
+ 
 * env shebang
+#+begin_src bash
 #!/usr/bin/env bash
+#+end_src
 
 * if variable is not defined as an environment variable, set to “”
+#+begin_src bash
 ${BUILD_IN_PROGRESS:-""}
+#+end_src
 
 * Loop against an array
-#+begin_src 
+#+begin_src bash
 DNS_ENTRY=foo.bar
-# Create an array with names of all dns-internal-resolver servers in region
+# Create an array with names of all servers in region
 declare -a ns=(server1
 server2
 server3)
@@ -22,7 +26,7 @@ done
 #+end_src
 
 * conditionals
-#+begin_src 
+#+begin_src bash
 BUILD_IN_PROGRESS=${BUILD_IN_PROGRESS:-""}
 PREPROD=${PREPROD:-""}
 declare -r CURRENT_LOG="/var/log/example.log"
@@ -40,7 +44,7 @@ fi
 #+end_src
 
 * IFS syntax
-#+begin_src 
+#+begin_src bash
 person_age="Bob|27,Mary|31,Adrian|65,Liz|48"
 
 IFS=',' read -ra user_pairs <<< "$person_age"
@@ -53,14 +57,14 @@ done
 
 * -n vs. -z
 # needs to be a string arg for -n
-#+begin_src 
+#+begin_src bash
 bash-3.2$ if [ -n "$UNSET" ]; then echo "I should do something"; fi
 bash-3.2$ UNSET=nowset
 bash-3.2$ if [ -n "$UNSET" ]; then echo "I should do something"; fi
 I should do something
 #+end_src
 
- #+begin_src 
+ #+begin_src bash
  ENFORCE_FIREWALL=true
 if [ -n "$ENFORCE_FIREWALL" ]; then
    export TAGS="enable-rules,enforce-firewall"
@@ -69,14 +73,14 @@ if [ -n "$ENFORCE_FIREWALL" ]; then
  fi
  #+end_src
 
-#+begin_src 
+#+begin_src bash
 $ echo $TAGS
 $ enable-rules,enforce-firewall
 #+end_src
 
 * Command line arguments and conditionals - from Red Hat cert lab
 # Started with
-#+begin_src 
+#+begin_src bash
 #!/usr/bin/env bash
 
 ARG=$1
@@ -90,7 +94,7 @@ else
 #+end_src
 
 # ended with
-#+begin_src 
+#+begin_src bash
 #!/usr/bin/env bash
 
 ARG=$1
@@ -105,10 +109,12 @@ fi
 #+end_src
 
 * set
+#+begin_src bash
 set -eu
+#+end_src
 
 * Defining a function
-#+begin_src 
+#+begin_src bash
 probe() ( 
     ping -qnc2 www.google.com | \
         grep round-trip && \ 
@@ -116,7 +122,7 @@ probe() (
     )
 #+end_src
 * Answer to the sed puzzle
-#+begin_src 
+#+begin_src bash
 [james@Jamess-MBP: ~]$ cat ~/test/sample.data
 102
 071
