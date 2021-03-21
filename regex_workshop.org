@@ -1,0 +1,301 @@
+<2021-03-20 Sat>
+
+https://www.lufthans.com/Akten/Presentations/2021/LibrePlanet/LibrePlanet.regular_expressions_workshop.2021Mar20.pdf
+
+Sequences of characters that define a matching pattern
+
+string-matching - sets of strings
+
+grep, sed, perl, python, database programs all support them
+
+Extended regular expressions - easier to use than basic ones
+
+From a syntax and typing perspective, becuase you need 
+
+** What they are Not
+*** not globs which are evaluated by the shell before the command is run
+**** regex are evaluated by the commands
+**** globbing is filename matching normally
+*** do not recurse, are not recursive, but you can capture
+*** Regex are essentially state machines
+
+** grep
+global regular expression print
+
+*** -i :: case insensitive
+*** -o :: just show the matched part of the string
+
+** The dot operator ::  . 
+a wildcard = any single character at that point
+exactly one character
+not a period in the match, but  a special character
+
+*** find any file with at least 7 characters in the filename
+#+begin_src 
+[james@dreamer3: ~/repos/reference_docs/regexlab]$ ls | grep .......
+file.html
+file.txt
+filehtml
+#+end_src
+
+*** match exactly one char; this matches files with html in them, but not files that end in htm
+#+begin_src 
+[james@dreamer3: ~/repos/reference_docs/regexlab]$ ls | grep htm.
+file.html
+filehtml
+#+end_src
+
+*** error-prone search for both Meier and Meyer spellings of the name in a file
+#+begin_src 
+[james@dreamer3: ~/repos/reference_docs/regexlab]$ grep Me.er file.txt
+Meier is one way
+Meyer is another way
+Mexer is something else
+#+end_src
+
+*** dot exercises
+**** Use ls to list all files in the lab directory. Use grep to search output for filenames that are at least 5 characters long.
+#+begin_src 
+ls | grep .....
+#+end_src
+**** Use ls to list all files in the lab directory. Use grep to search output for filenames that have an e in them.
+#+begin_src 
+ls | grep e
+#+end_src
+
+**** Use ls to list all files in the lab directory. Use grep to search output for filenames that have an e in them followed by at least two characters.
+#+begin_src 
+ls | grep e..
+#+end_src
+
+** Anchors
+*** beginning of string anchor :: ^
+**** anchors the pattern to the beginning of the line
+ # beginning of line, any 2 characters, and the field separator : -> a username with 2 characters
+ #+begin_src 
+grep ^..: /etc/passwd | head -n5
+ #+end_src
+
+*** end of string anchor :: $
+**** grep for accounts that have bash as the login shell
+ #+begin_src 
+grep /bash$ /etc/passwd
+ #+end_src
+
+**** search passwd for accounts that have a 4 character default command
+ #+begin_src 
+grep /....$ /etc/passwd
+ #+end_src
+
+
+*** anchor exercises
+**** search file.txt for empty lines with no content
+ #+begin_src 
+grep ^$ file.txt
+ #+end_src
+
+**** Search file.txt for lines that start with a hash to comment them out
+ #+begin_src 
+grep ^# file.txt
+ #+end_src
+
+**** List all files int eh lab directory and serach outout for filenames that end in 3 folloed by exactly one other character
+ #+begin_src 
+[james@dreamer3: ~/repos/reference_docs/regexlab]$ ls | grep e.$
+peel
+repeel
+three
+ #+end_src
+
+** match 0 or 1 :: ?
+*** This is an extended operator that needs -E
+*** error-prone search for both Meier and Meyer spellings of the name in a file
+#+begin_src 
+[james@dreamer3: ~/repos/reference_docs/regexlab]$ grep Me.er file.txt
+Meier is one way
+Meyer is another way
+Mexer is something else
+#+end_src
+
+*** dot exercises
+**** Use ls to list all files in the lab directory. Use grep to search output for filenames that are at least 5 characters long.
+#+begin_src 
+ls | grep .....
+#+end_src
+**** Use ls to list all files in the lab directory. Use grep to search output for filenames that have an e in them.
+#+begin_src 
+ls | grep e
+#+end_src
+
+**** Use ls to list all files in the lab directory. Use grep to search output for filenames that have an e in them followed by at least two characters.
+#+begin_src 
+ls | grep e..
+#+end_src
+
+** Anchors
+*** beginning of string anchor :: ^
+**** anchors the pattern to the beginning of the line
+ # beginning of line, any 2 characters, and the field separator : -> a username with 2 characters
+ #+begin_src 
+grep ^..: /etc/passwd | head -n5
+ #+end_src
+
+*** end of string anchor :: $
+**** grep for accounts that have bash as the login shell
+ #+begin_src 
+grep /bash$ /etc/passwd
+ #+end_src
+
+**** search passwd for accounts that have a 4 character default command
+ #+begin_src 
+grep /....$ /etc/passwd
+ #+end_src
+
+
+*** anchor exercises
+**** search file.txt for empty lines with no content
+ #+begin_src 
+grep ^$ file.txt
+ #+end_src
+
+**** Search file.txt for lines that start with a hash to comment them out
+ #+begin_src 
+grep ^# file.txt
+ #+end_src
+
+**** List all files int eh lab directory and serach outout for filenames that end in 3 folloed by exactly one other character
+ #+begin_src 
+[james@dreamer3: ~/repos/reference_docs/regexlab]$ ls | grep e.$
+peel
+repeel
+three
+ #+end_src
+
+** match 0 or 1 :: ?
+*** This is an extended operator that needs -E
+*** This operator matches 0 or 1 of whatever comes before it
+
+*** search for filenames that end either in htm or html
+#+begin_src 
+[james@dreamer3: ~/repos/reference_docs/regexlab]$ ls | grep -E html?$
+file.html
+filehtml
+#+end_src
+
+*** search for color with or without a "u" - US vs. British
+#+begin_src 
+[james@dreamer3: ~/repos/reference_docs/regexlab]$ grep -E colou?r file.txt
+Americans spell it color
+British spell it colour
+#+end_src
+
+*** exercises
+**** list files and search for those that start with a and are 1 or 2 characters long2.
+#+begin_src 
+[james@dreamer3: ~/repos/reference_docs/regexlab]$ ls | grep -E ^a.?
+a
+aa
+ab
+#+end_src
+**** list files and search for those that have an o in either the first or second spot
+#+begin_src 
+[james@dreamer3: ~/repos/reference_docs/regexlab]$ ls | grep -E ^.?o
+one
+oooooo
+pole
+#+end_src
+
+** RegEx varieties
+PCRE - perl-compatible
+
+** plus operator :: +
+match 1 or more of whatever came in front of it
+extended
+
+*** Search filenames for those that have an o followed by at least one other o
+#+begin_src 
+[james@dreamer3: ~/repos/reference_docs/regexlab]$ ls | grep -E oo+
+oooooo
+#+end_src
+
+*** search for lines that have been commented out, but start with at least one space
+#+begin_src 
+[james@dreamer3: ~/repos/reference_docs/regexlab]$ grep -E '^ +#' file.txt
+ # comment with leading spaces
+#+end_src
+
+** star operator ::  *
+*** Match 0 or more of whatever came in front of it
+*** Must be quoted to avoid shell interpretation
+
+.* matches nothing as well as something
+
+*** exercises
+**** "list files, search for those that have an e followed by zero or more e"
+#+begin_src 
+[james@dreamer3: ~/repos/reference_docs/regexlab]$ ls | grep -E 'ee*'
+file.html
+file.txt
+filehtml
+one
+peel
+pole
+repeel
+three
+#+end_src
+**** 
+# type the character you want to search for, then the operator
+#+begin_src 
+[james@dreamer3: ~/repos/reference_docs/regexlab]$ ls | grep -E 'pee*l'
+peel
+repeel
+#+end_src
+**** 
+#+begin_src 
+[james@dreamer3: ~/repos/reference_docs/regexlab]$ grep -E '^//.*' file.txt
+// double-slash style comment
+#+end_src
+** Quoting
+All regexes on the command line and in the shell scripts should be quoted
+Could be interpreted by the shell as globs
+Default to using single quotes, but may need double for shell variables
+
+** Not a glob
+ls oo* # will only look for o followed by an o, followed by 0 or more things
+
+
+** sed
+-r - extended regular expression
+-e - expression
+
+/ is just a delimiter
+whatever you use after the s becomes the delimiter
+(if you are a searching for a /)
+
+
+
+-n - quiet?
+
+p - print out the lines that you did change
+
+e* is 0 or more e's - null string at the beginning of the string
+also, between the letters is a null string, and those will get converted if you have g at the end
+
+** Behavior: greedy
+will match as much as they can
+
+** grep inversions
+show things that do not match with -v
+
+** single character quote
+\ will escape
+
+** collections
+
+look for any one of these characters
+[aeiou] any one of these will match
+
+** character classes
+[:alpha:][:upper:][:lower:][:alnum:][:digit:][:punct:]
+
+The outer square brackets say that it's a collection, the inner brackets say that its a character class.

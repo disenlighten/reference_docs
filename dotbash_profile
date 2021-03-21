@@ -11,3 +11,7 @@ bind '"\e[A":history-search-backward'
 bind '"\e[B":history-search-forward'
 # Custom lscolors
 LSCOLORS=exfxcxdxbxegedabagacad
+eval $(/opt/homebrew/bin/brew shellenv)
+alias emacsclient=ec
+alias grep='/opt/homebrew/bin/ggrep'
+alias sed='/opt/homebrew/bin/gsed'
