@@ -5,8 +5,8 @@ tmux new -s myname
 C-b c - create a window
 C-b w - list all windows
 C-b s - list all sessions
+C-b d - detach from session 
 
 ### conf settings
 # Type in all panes
 bind C-b setw synchronize-panes
-
