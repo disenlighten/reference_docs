@@ -1,0 +1,10 @@
+ # comment with leading spaces
+not a comment
+// double-slash style comment
+
+Americans spell it color
+British spell it colour
+Meier is one way
+Meyer is another way
+Mexer is something else
+# comment that starts at the beginning of the line

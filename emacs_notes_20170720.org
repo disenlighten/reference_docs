@@ -9,9 +9,9 @@ Had to set in iterm2 - profile -> keys - option key act as Esc+
 - Forward :: C-f
 - Next line :: C-n
 - End of Doc :: Shift-G ->  M->
-- Beginning of a Doc ::  M-<
+- Beginning of file ::  M-<
 - Go to a line # :: : -> M-g M-g
-- End of Line :: $ ->  C-e
+- End of file :: $ ->  C-e
 - Beginning of Line :: ^ -> C-a
 - Previous line :: k -> C-p
 - Back a word :: b ->   M-b
@@ -40,14 +40,14 @@ Had to set in iterm2 - profile -> keys - option key act as Esc+
 - set a marker :: C-<SPC> 
 - Quit emacs :: :q! ->  C-x C-c
 - Replace 1 character :: r -> (does not have an equivilent?)
-- Find a file ::  C-x C-f   
+- Find a file ::  C-x C-f
 - Save the file :: w -> C-x C-s 
 - Save the current buffer with a specified file name (write-file) ::  C-x C-w 
-- List buffers :: C-x C-b
 - run a shell command on a region :: C-u M-| 
-- Kill a buffer :: C-x 
 - Find and replace :: M-% (! for replace all) 
 - iElm - repeat command from history :: M-P
+- M-x sort-lines :: sort your selected
+- M-x align-regex :: align according to a pattern
 * Dired
 - Enter dired :: C-x d
 - Toggle to edit mode :: C-x C-q
@@ -60,9 +60,9 @@ Had to set in iterm2 - profile -> keys - option key act as Esc+
 - Open at point :: C-c C-o
 - Collapse to heading :: shift-Tab
 - Expand a heading :: Tab
-- M-up/down :: move a headline up or down
-- M-left/right :: promote or demote a headline
-- C-c C-, :: Shortcut to create code and other blocks
+- Move a headline up or down :: M-up/down
+- Promote or demote a headline :: M-left/right
+- Shortcut to create code and other blocks :: C-c C-,
 ** Fonts: 
 - *bold*
 - /italic/
@@ -70,7 +70,6 @@ Had to set in iterm2 - profile -> keys - option key act as Esc+
 - =code=
 - ~verbatim~
 - +strike-through+
-
 * BASH-specific
 - Backward :: C-b
 - Forward :: C-f
@@ -84,28 +83,21 @@ Had to set in iterm2 - profile -> keys - option key act as Esc+
 - Delete forward 1 word :: M-D
 - Reverse search :: C-r
 - Kill from the cursor position to end of line :: C-k 
-
-Notes from 1/19:
-C-x C-f - File browser (tab autocompletes)
-
-Open a new window: 
+* Windows
 - C-x 0 :: Close out the active pane
 - C-x 1 :: make the current pane the main one
 - C-x 2 :: new pane horizontal
 - C-x 3 :: new pane vertical
 - C-x o :: move to the next pane
-
 - C-k :: copy (kill it, then paste it twice)
 - C-/ :: undo (works in terminal)
-
 - C-S-c C-S-c - Multiple cursors :: (ctrl+shift+c x2)
-
 * Buffers  
 - C-x b :: make a buffer/ switch between buffers
 - C-x k :: destory a buffer
-
-- C-[space] :: set mark
-- M-x sort-lines :: sort your selected
-- M-x align-regex :: align according to a pattern
+* Programming
+- Start a python process :: C-c C-p
+- Interpret code in a region :: C-u C-c C-r
+- Interpret a LISP s-exp :: C-x C-e
 
 
