@@ -1,0 +1,173 @@
+* Info from RHCSA training book
+From: Chapter 7 - Installing and Updating Software Packages
+
+** Show packages using wildcard
+#+begin_src bash
+yum list 'http*'
+#+end_src
+
+** Check if a package is installed
+#+begin_src bash
+yum list installed | grep httpd
+#+end_src
+
+** Search packages
+#+begin_src bash
+yum search all 'web server'
+#+end_src
+
+** Get info about a package
+#+begin_src bash
+yum info httpd
+#+end_src
+
+** Display packages that match the path name specified
+#+begin_src bash
+yum provides /var/www/html
+#+end_src
+
+** What package is needed for program?
+#+begin_src bash
+yum whatprovides ssh
+#+end_src
+
+** Location of repos
+/etc/yum.repos.d/*
+
+** Location of install transaction logs
+/var/log/dnf.rpm.log
+
+** Configure a repo
+#+begin_src bash
+yum-config-manager --add-repo="http://dl.fedoraproject.org/pub/epel/8/x86_64/"
+#+end_src
+
+** Enable a repo
+#+begin_src bash
+yum-config-manager --enable rhel-8-server-debug-rpms
+#+end_src
+
+** Get a list of yum groups
+yum has the concept of groups, which are collections of related software installed together for a particular purpose. 
+In Red Hat Enterprise Linux 8, there are two kinds of groups. 
+Regular groups are collections of packages. 
+Environment groups are collections of regular groups. 
+#+begin_src bash
+yum grouplist
+#+end_src
+
+** Get info on a yum group
+#+begin_src bash
+yum groupinfo "System Tools"
+#+end_src
+
+** Update all packages
+#+begin_src 
+yum update
+#+end_src
+
+** Install an rpm using yum
+#+begin_src 
+yum localinstall blahblah.rpm
+#+end_src
+
+** Get a list of repos you are using
+#+begin_src bash
+yum repolist
+#+end_src
+
+** Intro to streams
+A stream allows a single repository to host multiple versions of an application's package and its dependencies. ("like a virtual repo")
+Red Hat Enterprise Linux 8 content is distributed through two main software repositories: 
+*** BaseOS
+The BaseOS repository provides the core operating system content for Red Hat Enterprise Linux as RPM packages.
+*** Application Stream (AppStream).
+The Application Stream repository provides content with varying life cycles as both modules and traditional packages. Application Stream contains necessary parts of the system, as well as a wide range of applications previously available as a part of Red Hat Software Collections and other products and programs.
+
+** Enable a stream
+Only one module stream may be enabled for a given module. Enabling an additional module stream will disable the original module stream.
+#+begin_src 
+yum module enable ${streamname}
+#+end_src
+
+** Switch streams
+#+begin_src 
+sudo yum module remove postgresql
+sudo yum module reset postgresql
+sudo yum module install postgresql:10
+#+end_src
+
+** Install a module 
+A module is a set of RPM packages that are a consistent set that belong together. Typically, this is organized around a specific version of a software application or programming language. A typical module can contain packages with an application, packages with the application’s specific dependency libraries, packages with documentation for the application, and packages with helper utilities.
+
+The @ notation informs yum that the argument is a module name instead of a package name.
+#+begin_src 
+yum install @perl
+#+end_src
+
+*** Example
+#+begin_src 
+sudo yum module install postgresql:10/client
+#+end_src
+
+# install <package>:stream/profile http:2.4/common
+
+
+** Verify that an rpm is installed
+a - all
+#+begin_src 
+rpm -qa rhcsa*
+#+end_src
+
+** install the httpd module with the 2.4 stream and the common profile.
+#+begin_src 
+yum module install httpd:2.4/common
+#+end_src
+
+** Verify if a specific rpm is installed
+q - query
+p - packaage file 
+i - info (as a switch to -q)
+#+begin_src 
+rpm -q -p rhcsa-script-1.0.0-1.noarch.rpm -i
+#+end_src
+
+** Man pages
+subscription-manager(8), rct(8), yum(1), yum.conf(5), yum(1), yum.conf(5), yum-config-manager(1)
+
+* Class notes from RHEL 199 training
+** Reverse a previous command
+#+begin_src 
+yum history undo 6
+yum history redo 6
+#+end_src
+
+** Repo files
+*** If you put multiple entries in a repo file, it will look in order, use the first one
+*** Example format
+#+begin_src 
+[RHEL] # heading
+name=rhel 
+baseurl=http://servera.lab.example.com/pub/rhel8/dvd # place where packages will be downloaded from
+gpgcheck=0 # or false
+enabled=1 # or true
+#+end_src
+*** Renaming
+**** rename the file
+#+begin_src 
+mv longname_blah_blah_blah.repo shortname.repo
+#+end_src
+**** change heading and name in file to the shortname
+**** yum repolist oowill show you the new repo
+
+* Misc
+** Oracle Linux Vagrant boxes
+https://yum.oracle.com/boxes/
+
+*** Install commands
+#+begin_src bash
+vagrant init oraclelinux/8 https://oracle.github.io/vagrant-projects/boxes/oraclelinux/8.json
+vagrant up
+vagrant ssh
+#+end_src
+
