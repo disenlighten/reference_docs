@@ -299,3 +299,61 @@ look for any one of these characters
 [:alpha:][:upper:][:lower:][:alnum:][:digit:][:punct:]
 
 The outer square brackets say that it's a collection, the inner brackets say that its a character class.
+
+
+** Lab 1 results
+
+*** List the files, replace txt at the beginning of the filename with tickets showing only the files that were changed.
+#+begin_src 
+[james@dreamer3: ~/repos/reference_docs/regexlab/regexlab-sd]$ ls | sed -n -re 's/^txt/ticket/p'
+ticket.log
+ticket.txt
+#+end_src
+*** List the files, search for those that have a t in them and somewhere later an o.
+#+begin_src 
+[james@dreamer3: ~/repos/reference_docs/regexlab/regexlab-sd]$ ls | grep -E 't.*o.*'
+#+end_src
+*** List the files, convert the first x the filename to a y.
+#+begin_src 
+[james@dreamer3: ~/repos/reference_docs/regexlab/regexlab-sd]$ ls | sed -re 's/x/y/'
+one.log
+one.tyt
+tyt.log
+tyt.txt
+#+end_src
+*** List the files, convert the first occurance of ne into the letter y.
+#+begin_src 
+[james@dreamer3: ~/repos/reference_docs/regexlab/regexlab-sd]$ ls | sed -re 's/ne/y/'
+oy.log
+oy.txt
+txt.log
+txt.txt
+#+end_src
+*** List the files, convert a t along with the letter before the t and the letter after the t into a y.
+# question 7
+# no
+#+begin_src 
+[james@dreamer3: ~/repos/reference_docs/regexlab/regexlab-sd]$ ls | sed -re 's/t+/y/g'
+one.log
+one.yxy
+yxy.log
+yxy.yxy
+#+end_src
+*** List the files, convert a t along with the letter before the t, if there is a letter before the t, and the letter after the t into a y.
+# Question 8
+?
+*** List the files, convert everything from the first t to the end of the filename to ZZ
+# question 9
+# ? 
+#+begin_src 
+[james@dreamer3: ~/repos/reference_docs/regexlab/regexlab-sd]$ ls | sed -re 's/t.*/ZZ/g'
+one.log
+one.ZZ
+ZZ
+ZZ
+#+end_src
+*** List the files, search for all that have an o followed by at least two characters, then convert the strings having log as a suffix to use out instead.
+#+begin_src 
+[james@dreamer3: ~/repos/reference_docs/regexlab/regexlab-sd]$ ls | grep o.. | sed -n -re 's/log$/out/p'
+one.out
+#+end_src

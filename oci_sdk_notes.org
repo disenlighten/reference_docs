@@ -1,0 +1,95 @@
+* Creating users
+#+begin_src python
+from oci.config import from_file
+config = from_file()
+config = from_file(file_location="~/.oci/config")
+from oci.identity import IdentityClient
+identity = IdentityClient(config)
+from oci.identity.models import CreateUserDetails
+request = CreateUserDetails()
+compartment_id = config["tenancy"]
+request.compartment_id = compartment_id
+request.description = "primary test user"
+request.name = "primary"
+user = identity.create_user(request)
+request = CreateUserDetails()
+request.description = "secondary test user"
+request.compartment_id = compartment_id
+request.name = "secondary"
+user = identity.create_user(request)
+#+end_src
+
+* Customer secret keys
+** ansible modules https://github.com/oracle/oci-ansible-modules/blob/master/docs/modules/oci_customer_secret_key_module.rst
+
+* Managing secrets
+# https://github.com/oracle/oci-python-sdk/blob/master/examples/secret_example.py
+
+#+begin_src python
+import oci
+import sys
+from datetime import datetime
+from datetime import timedelta
+
+
+JamieVault
+
+
+def get_vault(client, vault_id):
+    return client.get_vault(vault_id)
+
+def create_secret(vaults_client_composite, compartment_id, secret_content, secret_name, valult_id, key_id):
+    print("Creating a secret {}.".format(secret_name))
+    # Create secret_content_details that needs to be passed when creating secret.
+    secret_description = "This is just a test"
+    secret_content_details = oci.vault.models.Base64SecretContentDetails(
+        content_type=oci.vault.models.SecretContentDetails.CONTENT_TYPE_BASE64,
+        name=secret_content,
+        stage="CURRENT",
+        content=secret_content)
+    secrets_details = oci.vault.models.CreateSecretDetails(compartment_id=compartment_id,
+                                                           description=secret_description,
+                                                           secret_content=secret_content_details,
+                                                           secret_name=secret_name,
+                                                           vault_id=vault_id,
+                                                           key_id=key_id)
+
+    # Create secret and wait for the secret to become active
+    response = vaults_client_composite.create_secret_and_wait_for_state(create_secret_details=secrets_details,
+                                                                        wait_for_states=[
+                                                                            oci.vault.models.Secret.LIFECYCLE_STATE_ACTIVE])
+    return response
+
+def get_secret(vaults_client, secret_id):
+    return vaults_client.get_secret(secret_id)
+
+def create_newsecret_version(vaults_client_composite, secret_content, secret_id):
+    print("Creating a new secret version {}.".format(secret_id))
+
+    # Create secret_content_details that needs to be passed when updating secret content.
+    secret_content_details = oci.vault.models.Base64SecretContentDetails(
+        content_type=oci.vault.models.SecretContentDetails.CONTENT_TYPE_BASE64,
+        stage="CURRENT",
+        content=secret_content)
+
+    secrets_details = oci.vault.models.UpdateSecretDetails(secret_content=secret_content_details)
+
+    # Create new secret version and wait for the new version to become active.
+    response = vaults_client_composite.update_secret_and_wait_for_state(secret_id,
+                                                                        secrets_details,
+                                                                        wait_for_states=[
+                                                                            oci.vault.models.Secret.LIFECYCLE_STATE_ACTIVE])
+    return response
+
+def delete_secret_version(vaults_client, secret_id, deletion_time, secret_version_number):
+    print("Deleting a specific version of a secret")
+
+    # Create Secret version deletion object
+    secret_version_deletion_details = oci.vault.models.ScheduleSecretVersionDeletionDetails(time_of_deletion=deletion_time)
+
+    # Delete the secret version or mark the version for deletion.
+    response = vaults_client.schedule_secret_version_deletion(secret_id,
+                                                              secret_version_number=secret_version_number,
+                                                              schedule_secret_version_deletion_details=secret_version_deletion_details)
+    print("Secret deletion response is: {}.".format(response.data))
+#+end_src

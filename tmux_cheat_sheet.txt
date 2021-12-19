@@ -10,3 +10,5 @@ C-b s - list all sessions
 # Type in all panes
 bind C-b setw synchronize-panes
 
+# kill a session
+tmux kill-session -t mysession
