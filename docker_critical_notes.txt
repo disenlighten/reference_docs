@@ -34,5 +34,8 @@ docker image history
 # 
 docker image inspect 
 
+* Save a docker image
 
+docker save (image name)> /home/save.tar
 
+docker load -i ~/save.tar

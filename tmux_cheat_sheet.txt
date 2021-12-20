@@ -2,14 +2,33 @@ tmux cheat sheet
 
 # start a new session with the name "myname"
 tmux new -s myname
-C-b c - create a window
+C-b c - create a window (tab)
 C-b w - list all windows
 C-b s - list all sessions
-C-b d - detach from session 
+C-b d - detach from session
+C-b q - show pane numbers
+C-b o - Go to the next pane 
+C-b z - Toggle pane zoom
+C-b [ - Change to arrow move (C-c to cancel)
+
+* Working With Tabs
+C-b n - move to the next tab on the right
+C-b p - move to the next tab on the left
+C-b (#) - move to the tab with number equal to (#) (e.g. 0 to go to the first tab)
+C-b x - close a tab  (hit y and Enter to confirm closing of this tab.)
 
 ### conf settings
+<<<<<<< Updated upstream
 # Type in all panes
 bind C-b setw synchronize-panes
 
 # kill a session
 tmux kill-session -t mysession
+=======
+# Type in all panes (type again to toggle off)
+C-b :setw synchronize-panes
+
+tmux kill-session -a - kill all sessions but the current one
+tmux a -t $SESSIONNAME - attach to a session
+
+>>>>>>> Stashed changes

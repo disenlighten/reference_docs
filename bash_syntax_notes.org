@@ -133,3 +133,11 @@ while read X;
     do SUM+=$X; 
 done < <(gsed -e 's/^0//'  sample.data)
 #+end_src
+* Check if arguments are empty
+#+begin_src bash
+
+if [ $# -eq 0 ]
+  then
+    echo "No arguments supplied"
+fi
+#+end_src
