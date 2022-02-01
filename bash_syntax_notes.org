@@ -25,6 +25,17 @@ for HOST in ${ns[@]}; do
 done
 #+end_src
 
+* Check if values are in an array
+#+begin_src bash
+declare -a FRUITS=("APPLE" "PEAR" "BANANA")
+CURRENT_FRUIT="APPLE"
+[[ "${FRUITS[@]} " =~ "${CURRENT_FRUIT} " ]] && echo "YES" || echo "NO";
+# YES
+CURRENT_FRUIT="ORANGE"
+[[ "${FRUITS[@]} " =~ "${CURRENT_FRUIT} " ]] && echo "YES" || echo "NO";
+# NO
+#+end_src
+
 * conditionals
 #+begin_src bash
 BUILD_IN_PROGRESS=${BUILD_IN_PROGRESS:-""}
