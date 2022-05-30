@@ -1,28 +1,44 @@
-tmux cheat sheet
+#+TITLE: tmux cheat sheet
 
-# start a new session with the name "myname"
+* Sessions
+** start a new session with the name "myname"
+#+begin_src 
 tmux new -s myname
-C-b c - create a window (tab)
-C-b w - list all windows
-C-b s - list all sessions
-C-b d - detach from session
-C-b q - show pane numbers
-C-b o - Go to the next pane 
-C-b z - Toggle pane zoom
-C-b [ - Change to arrow move (C-c to cancel)
+#+end_src
+** C-b s - list all sessions
+** C-b d - detach from session
+** C-b C-b d - (Session within a session syntax) Detatch from a session within a session
+** kill all sessions but the current one
+#+begin_src 
+tmux kill-session -a - 
+#+end_src
+** attach to a session
+#+begin_src
+tmux a -t $SESSIONNAME
+#+end_src
 
-* Working With Tabs
-C-b n - move to the next tab on the right
-C-b p - move to the next tab on the left
-C-b (#) - move to the tab with number equal to (#) (e.g. 0 to go to the first tab)
-C-b x - close a tab  (hit y and Enter to confirm closing of this tab.)
+* Windows
+** C-b c - create a window (tab)
+** C-b w - list all windows
 
-### conf settings
-# Type in all panes (type again to toggle off)
+* Panes
+** C-b q - show pane numbers
+** C-b o - Go to the next pane 
+** C-b z - Toggle pane zoom
+** C-b [ - Change to arrow move (C-c to cancel)
+
+* Tabs
+** C-b n - move to the next tab on the right
+** C-b p - move to the next tab on the left
+** C-b (#) - move to the tab with number equal to (#) (e.g. 0 to go to the first tab)
+** C-b x - close a tab  (hit y and Enter to confirm closing of this tab.)
+
+* Config
+** Type in all panes (type again to toggle off)
+#+begin_src 
 C-b :setw synchronize-panes
+#+end_src
 
-tmux kill-session -a - kill all sessions but the current one
-tmux a -t $SESSIONNAME - attach to a session
 
-* Session within a session
-C-b C-b d # detach
+
+
