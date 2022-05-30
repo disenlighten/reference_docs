@@ -1,8 +1,7 @@
 * Creating users
 #+begin_src python
 from oci.config import from_file
-config = from_file()
-config = from_file(file_location="~/.oci/config")
+config = from_file(file_location="~/.oci/config", profile_name="FREE-TIER")
 from oci.identity import IdentityClient
 identity = IdentityClient(config)
 from oci.identity.models import CreateUserDetails
@@ -19,11 +18,75 @@ request.name = "secondary"
 user = identity.create_user(request)
 #+end_src
 
+* List users
+# doc for more info
+compartment_id = config["tenancy"]
+list_users_response = identity.list_users(
+    compartment_id=compartment_id,
+    sort_by="TIMECREATED",
+    sort_order="DESC")
+
+
+# Get the data from response
+print(list_users_response.data)
+
+** process specific user data
+#+begin_src python
+In [9]: for user in list_users_response.data:
+   ...:     user_name = user.name
+   ...:     user_ocid = user.id
+   ...:     print('{},{}'.format(user_name, user_ocid))
+   ...:
+   ...:
+secondary,ocid1.user.oc1..aaaaaaaamnirhfsasrf3wym6imzdtu3y4bg2fkjqtn6kruk5jjcghym52h6a
+primary,ocid1.user.oc1..aaaaaaaancg3yxppzf4m2aasnoarsnomcf5enwyuuo7lewubrkpcinhl43va
+pbin2au@gmail.com,ocid1.user.oc1..aaaaaaaacmzl7f3lpecqc662skhj26y2uyxawhq6jbt2lo24ybiyzmnzgjxa
+#+end_src
+
 * Customer secret keys
 ** ansible modules https://github.com/oracle/oci-ansible-modules/blob/master/docs/modules/oci_customer_secret_key_module.rst
 
+** I found the docs linked off of https://docs.oracle.com/en-us/iaas/Content/Identity/Tasks/managingcredentials.htm#To4 -> Using the API section
+*** List
+https://docs.oracle.com/en-us/iaas/api/#/en/identity/20160918/CustomerSecretKeySummary/ListCustomerSecretKeys
+#+begin_src python
+list_customer_secret_keys_response = identity.list_customer_secret_keys(
+    user_id=primary_test_user_ocid)
+
+primary_test_user_ocid='REDACTED'
+
+list_customer_secret_keys_response = identity.list_customer_secret_keys(
+     user_id=primary_test_user_ocid)
+
+print(list_customer_secret_keys_response.data)
+# []
+#+end_src
+
+*** Create
+#+begin_src python
+create_customer_secret_key_response = identity.create_customer_secret_key(
+    create_customer_secret_key_details=oci.identity.models.CreateCustomerSecretKeyDetails(
+        display_name='test_key_20211229_a'),
+    user_id=primary_test_user_ocid)
+
+# Get the data from response
+print(create_customer_secret_key_response.data)
+#+end_src
+
+*** Delete
+#+begin_src python
+oldkey=list_customer_secret_keys_response.data[1].id
+
+delete_customer_secret_key_response = identity.delete_customer_secret_key(
+     user_id=primary_test_user_ocid,
+     customer_secret_key_id=oldkey)
+#+end_src
+
+
 * Managing secrets
+** Example code
 # https://github.com/oracle/oci-python-sdk/blob/master/examples/secret_example.py
+
 
 #+begin_src python
 import oci
@@ -31,14 +94,10 @@ import sys
 from datetime import datetime
 from datetime import timedelta
 
-
-JamieVault
-
-
 def get_vault(client, vault_id):
     return client.get_vault(vault_id)
 
-def create_secret(vaults_client_composite, compartment_id, secret_content, secret_name, valult_id, key_id):
+def create_secret(vaults_client_composite, compartment_id, secret_content, secret_name, vault_id, key_id):
     print("Creating a secret {}.".format(secret_name))
     # Create secret_content_details that needs to be passed when creating secret.
     secret_description = "This is just a test"
@@ -93,3 +152,381 @@ def delete_secret_version(vaults_client, secret_id, deletion_time, secret_versio
                                                               schedule_secret_version_deletion_details=secret_version_deletion_details)
     print("Secret deletion response is: {}.".format(response.data))
 #+end_src
+
+** Secret Versions and Rotation States
+https://docs.oracle.com/en-us/iaas/Content/KeyManagement/Concepts/secretversionsrotationstates.htm
+*** List Secret Versions
+https://docs.oracle.com/en-us/iaas/api/#/en/secretmgmt/20180608/SecretVersionSummary/ListSecretVersions
+
+# Sorry, we do not have a Python SDK example for this request.
+
+*** Create Secret (for my testing only)
+https://docs.oracle.com/en-us/iaas/api/#/en/secretmgmt/20180608/Secret/CreateSecret
+
+POST /20180608/secrets
+Host: <managementEndpoint>
+<authorization and other headers>
+{
+  "vaultId": "<vault_OCID>",
+  "secretRules": "[]",
+  "compartmentId": "",
+  "secretName": "testSecret",
+  "description": "my test secret",
+  "keyId": "<key_OCID>",
+  "secretContent": 
+    {
+      "content": "<base64_encoded_secret_contents>",
+      "contentType": "BASE64"
+    }
+}
+
+# Sorry, we do not have a Python SDK example for this request.
+
+
+
+
+def list_secret_version(vault_client, secret_id):
+    list_version_response = vault_client.list_secret_versions(secret_id)
+    return list_version_response
+
+list_version_response = list_secret_version(vault_client,secret)
+
+# worked
+In [93]: for secret in vault_secrets_list.data:
+    ...:     list_version_response = list_secret_version(vault_client,secre
+    ...: t.id)
+    ...:     for secret_version in list_version_response.data:
+    ...:         if "CURRENT" in secret_version.stages:
+    ...:            print(secret_version.secret_id)
+
+In [71]: secret_version_info.data
+Out[71]:
+[{
+   "content_type": null,
+   "name": null,
+   "secret_id": "ocid1.vaultsecret.oc1.iad.amaaaaaal6zm4uaatunao5rjbgu2tguvys64wlmo2q5q7ow3lowyr7nep7ba",
+   "stages": [
+     "CURRENT",
+     "LATEST"
+   ],
+   "time_created": "2021-12-30T23:47:52.044000+00:00",
+   "time_of_deletion": null,
+   "time_of_expiry": null,
+   "version_number": 2
+ },
+
+* Found some good rotation info in docs
+https://confluence.oci.oraclecorp.com/pages/viewpage.action?spaceKey=ID&title=Credential+Rotation+Code+Samples+and+Templates
+
+12 - Local Tenancy Account Rotation - Passwords
+
+
+** test tenancy secret names
+cat
+
+dog
+
+** notes from 1/18
+*** fixing get_secret_ocid
+**** first attempt
+#+begin_src python
+def get_secret_ocid(vault_secrets_list, console_user, secret_kind, account_info_dict):
+    """Gets the secret key ocid based on the response from vault_secrets_list and secret_kind.
+    secret_kind is either key for key name or access_id for access_id"""
+    secret_kind_value = "vault_{}_name".format(secret_kind)
+    for vault_secret in vault_secrets_list.data:
+        if vault_secret.secret_name == account_info_dict[console_user][secret_kind_value] and vault_secret.id != None:
+            return vault_secret.id
+        else:
+            exit_handler("Could not populate {} variable for user {}".format(secret_kind_value, console_user), 1, logger)
+#+end_src
+**** test attempt
+def get_secret_ocid(vault_secrets_list, console_user, secret_kind, account_info_dict, logger):
+    """Gets the secret key ocid based on the response from vault_secrets_list and secret_kind.
+    secret_kind is either key for key name or access_id for access_id"""
+    secret_kind_value = "vault_{}_name".format(secret_kind)
+    for vault_secret in vault_secrets_list.data:
+        if vault_secret.secret_name == account_info_dict[console_user][secret_kind_value] and vault_secret.id != None:
+            return vault_secret.id
+        else:
+            print(account_info_dict[console_user][secret_kind_value])
+            print(vault_secret.secret_name)
+            # exit_handler("Could not populate {} variable for user {}".format(secret_kind_value, console_user), 1, logger)
+            print("whyy?!")
+
+# the else catches every situation where the name does not match...
+
+
+**** trying filter
+secret_ocid = list(filter(lambda vault_secret: vault_secret.secret_name == account_info_dict[console_user][secret_kind_value], vault_secrets_list.data))[0].id
+
+***** next attempt
+#+begin_src python
+def get_secret_ocid(vault_secrets_list, console_user, secret_kind, account_info_dict, logger):
+    """Gets the secret key ocid based on the response from vault_secrets_list and secret_kind.
+    secret_kind is either key for key name or access_id for access_id"""
+    secret_kind_value = "vault_{}_name".format(secret_kind)
+    try:
+        secret_ocid = list(filter(lambda vault_secret: vault_secret.secret_name == account_info_dict[console_user][secret_kind_value], vault_secrets_list.data))[0].id
+        return secret_ocid
+    except IndexError:
+         exit_handler("Could not populate {} variable for user {}".format(secret_kind_value, console_user), 1, logger)
+#+end_src
+
+*** test results
+
+first user looks good, but 2nd user failed with:
+2022-01-18 18:54:18,135 - root - ERROR - Must have 2 customer secrets for deletion: Must have 2 customer secrets for deletion : RC : 1
+
+How to handle that situation?
+
+**** Where I left off - need to create a new customer secret key for secondary - OK
+**** Script output - evening of 1/18
+(oci-sdk) [jpemante@noumenon: ~]$ python3 free_tier_cred_mgr.py --operation rotate_secrets
+2022-01-18 20:31:30,708 - root - INFO - +_+_+ Beginning cred-mgr.py +_+_+
+2022-01-18 20:31:30,708 - root - INFO - setting up clients...
+2022-01-18 20:31:31,752 - root - INFO - Deleted old customer secret keys for primary...
+Creating a new secret version ocid1.vaultsecret.oc1.iad.amaaaaaal6zm4uaac4r7uhlatmww3tblnjxair5v53nhv67w5gjf7d52xwaq.
+Creating a new secret version ocid1.vaultsecret.oc1.iad.amaaaaaal6zm4uaava5suwnomh4mdmqhwmnggpege2wf63q3vbhrsvtodj4a.
+2022-01-18 20:31:46,231 - root - INFO - Reporting on vault secrets...
+2022-01-18 20:31:46,231 - root - INFO - 'secret_name':'dog-toy','description':'This is just a test','secret_ocid':'ocid1.vaultsecret.oc1.iad.amaaaaaal6zm4uaavx73dt5b3qnczjyq6s74xpzuwsjl4o36tdr7i5nmooaq'
+2022-01-18 20:31:46,232 - root - INFO - 'secret_name':'dog-kibble','description':'This is just a test','secret_ocid':'ocid1.vaultsecret.oc1.iad.amaaaaaal6zm4uaa6uspvejxg75wdbje3ngm7rnak275u5xked7yzljrb6tq'
+2022-01-18 20:31:46,232 - root - INFO - 'secret_name':'cat-toy','description':'This is just a test','secret_ocid':'ocid1.vaultsecret.oc1.iad.amaaaaaal6zm4uaava5suwnomh4mdmqhwmnggpege2wf63q3vbhrsvtodj4a'
+2022-01-18 20:31:46,232 - root - INFO - 'secret_name':'cat-kibble','description':'This is just a test','secret_ocid':'ocid1.vaultsecret.oc1.iad.amaaaaaal6zm4uaac4r7uhlatmww3tblnjxair5v53nhv67w5gjf7d52xwaq'
+2022-01-18 20:31:46,232 - root - INFO - Reporting on vault secrets...
+2022-01-18 20:31:46,408 - root - INFO - 'secret_id':'ocid1.vaultsecret.oc1.iad.amaaaaaal6zm4uaavx73dt5b3qnczjyq6s74xpzuwsjl4o36tdr7i5nmooaq','version_number':'1','time_created':'2022-01-16 22:22:27.519000+00:00'
+2022-01-18 20:31:49,569 - root - INFO - 'secret_id':'ocid1.vaultsecret.oc1.iad.amaaaaaal6zm4uaa6uspvejxg75wdbje3ngm7rnak275u5xked7yzljrb6tq','version_number':'1','time_created':'2022-01-16 22:22:06.890000+00:00'
+2022-01-18 20:31:53,250 - root - INFO - 'secret_id':'ocid1.vaultsecret.oc1.iad.amaaaaaal6zm4uaava5suwnomh4mdmqhwmnggpege2wf63q3vbhrsvtodj4a','version_number':'4','time_created':'2022-01-19 01:31:37.987000+00:00'
+2022-01-18 20:31:56,417 - root - INFO - 'secret_id':'ocid1.vaultsecret.oc1.iad.amaaaaaal6zm4uaac4r7uhlatmww3tblnjxair5v53nhv67w5gjf7d52xwaq','version_number':'4','time_created':'2022-01-19 01:31:33.295000+00:00'
+2022-01-18 20:32:00,003 - root - INFO - Deleted old customer secret keys for secondary...
+Creating a new secret version ocid1.vaultsecret.oc1.iad.amaaaaaal6zm4uaa6uspvejxg75wdbje3ngm7rnak275u5xked7yzljrb6tq.
+Creating a new secret version ocid1.vaultsecret.oc1.iad.amaaaaaal6zm4uaavx73dt5b3qnczjyq6s74xpzuwsjl4o36tdr7i5nmooaq.
+2022-01-18 20:32:16,768 - root - INFO - Reporting on vault secrets...
+2022-01-18 20:32:16,768 - root - INFO - 'secret_name':'dog-toy','description':'This is just a test','secret_ocid':'ocid1.vaultsecret.oc1.iad.amaaaaaal6zm4uaavx73dt5b3qnczjyq6s74xpzuwsjl4o36tdr7i5nmooaq'
+2022-01-18 20:32:16,768 - root - INFO - 'secret_name':'dog-kibble','description':'This is just a test','secret_ocid':'ocid1.vaultsecret.oc1.iad.amaaaaaal6zm4uaa6uspvejxg75wdbje3ngm7rnak275u5xked7yzljrb6tq'
+2022-01-18 20:32:16,768 - root - INFO - 'secret_name':'cat-toy','description':'This is just a test','secret_ocid':'ocid1.vaultsecret.oc1.iad.amaaaaaal6zm4uaava5suwnomh4mdmqhwmnggpege2wf63q3vbhrsvtodj4a'
+2022-01-18 20:32:16,768 - root - INFO - 'secret_name':'cat-kibble','description':'This is just a test','secret_ocid':'ocid1.vaultsecret.oc1.iad.amaaaaaal6zm4uaac4r7uhlatmww3tblnjxair5v53nhv67w5gjf7d52xwaq'
+2022-01-18 20:32:16,768 - root - INFO - Reporting on vault secrets...
+2022-01-18 20:32:16,923 - root - INFO - 'secret_id':'ocid1.vaultsecret.oc1.iad.amaaaaaal6zm4uaavx73dt5b3qnczjyq6s74xpzuwsjl4o36tdr7i5nmooaq','version_number':'2','time_created':'2022-01-19 01:32:08.666000+00:00'
+2022-01-18 20:32:20,145 - root - INFO - 'secret_id':'ocid1.vaultsecret.oc1.iad.amaaaaaal6zm4uaa6uspvejxg75wdbje3ngm7rnak275u5xked7yzljrb6tq','version_number':'2','time_created':'2022-01-19 01:32:00.870000+00:00'
+2022-01-18 20:32:23,584 - root - INFO - 'secret_id':'ocid1.vaultsecret.oc1.iad.amaaaaaal6zm4uaava5suwnomh4mdmqhwmnggpege2wf63q3vbhrsvtodj4a','version_number':'4','time_created':'2022-01-19 01:31:37.987000+00:00'
+2022-01-18 20:32:27,023 - root - INFO - 'secret_id':'ocid1.vaultsecret.oc1.iad.amaaaaaal6zm4uaac4r7uhlatmww3tblnjxair5v53nhv67w5gjf7d52xwaq','version_number':'4','time_created':'2022-01-19 01:31:33.295000+00:00'
+
+
+*** checking the secrets in the console
+**** access id is a huge ugly thing, then when I click show decoded Base64 it is the access id given from the creation.
+
+* Script to manage local tenancy user passwords
+<2022-02-26 Sat>
+
+
+** update user capabilities
+https://docs.oracle.com/en-us/iaas/api/#/en/identity/20160918/User/UpdateUserCapabilities
+
+#+begin_src python
+update_user_capabilities_response = identity_client.update_user_capabilities(
+    user_id="ocid1.test.oc1..<unique_ID>EXAMPLE-userId-Value",
+    update_user_capabilities_details=oci.identity.models.UpdateUserCapabilitiesDetails(
+        can_use_console_password=False,
+        can_use_api_keys=False,
+        can_use_auth_tokens=False,
+        can_use_smtp_credentials=True,
+        can_use_db_credentials=False,
+        can_use_customer_secret_keys=True,
+        can_use_o_auth2_client_credentials=True),
+    if_match="EXAMPLE-ifMatch-Value")
+#+end_src
+
+** Update UIPassword (I don't need this)
+https://docs.oracle.com/en-us/iaas/api/#/en/identity/20160918/UIPassword/CreateOrResetUIPassword
+
+Sorry, we do not have a Python SDK example for this request.
+
+** identity_client.create_or_reset_ui_password is what you really need
+https://docs.oracle.com/en-us/iaas/tools/python-sdk-examples/2.58.0/identity/create_or_reset_ui_password.py.html
+*** my attempt
+from oci.identity import models as identity_models
+
+https://github.com/oracle/oci-python-sdk/blob/00cd57d72b7095cba79fa1fe04bb936dae67c3d6/src/oci/identity/models/ui_password.py
+
+In [3]: dir(identity_models.UIPassword)
+Out[3]:
+['LIFECYCLE_STATE_ACTIVE',
+ 'LIFECYCLE_STATE_CREATING',
+ 'LIFECYCLE_STATE_DELETED',
+ 'LIFECYCLE_STATE_DELETING',
+ 'LIFECYCLE_STATE_INACTIVE',
+ '__class__',
+ '__delattr__',
+ '__dict__',
+ '__dir__',
+ '__doc__',
+ '__eq__',
+ '__format__',
+ '__ge__',
+ '__getattribute__',
+ '__gt__',
+ '__hash__',
+ '__init__',
+ '__init_subclass__',
+ '__le__',
+ '__lt__',
+ '__module__',
+ '__ne__',
+ '__new__',
+ '__reduce__',
+ '__reduce_ex__',
+ '__repr__',
+ '__setattr__',
+ '__sizeof__',
+ '__str__',
+ '__subclasshook__',
+ '__weakref__',
+ 'inactive_status',
+ 'lifecycle_state',
+ 'password',
+ 'time_created',
+ 'user_id']
+
+
+ 'deleter',
+ 'fdel',
+ 'fget',
+ 'fset',
+ 'getter',
+ 'setter']
+
+*** testing
+from oci.identity import IdentityClient
+from oci.identity import models as identity_models
+from oci.config import from_file
+
+config = from_file(file_location="~/.oci/config", profile_name="FREE-TIER")
+identity_client = IdentityClient(config)
+
+
+tertiary_ocid = 'ocid1.user.oc1..aaaaaaaajuwlq34fw4dghxppmoy7r6vjz7jw5uad4tqfssit5l32v3r3m3dq'
+
+
+*** test list
+compartment_id = config["tenancy"]
+identity_client.list_users(
+            compartment_id=compartment_id)
+*** getting a 404 error
+If you're in the Administrators group, then you have the required access for managing users. 
+
+identity_client, vault_client, vaults_client_composite = configure_clients(logger)
+compartment_id, prod_compartment_id = get_compartments(config)
+list_users_response = identity_client.list_users(compartment_id=compartment_id)
+ # Set the prod compartment variable
+prod_compartment_id = compartment_id
+user_ocid_list = list_console_user_ocids(list_users_response, free_users)
+
+**** example of how we use this currently
+def create_customer_secret_key(identity_client, identity_models, user_ocid, key_display_name):
+    create_customer_secret_key_response = identity_client.create_customer_secret_key(
+        create_customer_secret_key_details=identity_models.CreateCustomerSecretKeyDetails(
+        display_name=key_display_name),
+        user_id=user_ocid)
+    return create_customer_secret_key_response
+
+
+*** worked - change password
+In [27]: Create_or_reset_ui_password_response = identity_client.cr
+    ...: eate_or_reset_ui_password(user_id=test_ocid)
+
+*** worked - change capailities to False
+update_user_capabilities_response = identity_client.update_user_capabilities(
+    user_id=test_ocid,
+    update_user_capabilities_details=identity_models.UpdateUserCapabilitiesDetails(
+        can_use_console_password=False))
+
+*** error when you try to reset password while capability is disabled
+8518D89D5084/B1A14B73CF0A86E23C33FFBD17BD49C8', 'code': 'UserCapabilityAbsent', 'message': "User capability for user 'tertiary' is set to false for using this credential type: 'Console Password'", 'status': 409}
+
+
+*** writing functions
+#+begin_src python
+def set_uipassword_capability_to_true(identity_client, console_user_ocid):
+    try:
+        identity_client.update_user_capabilities(
+            user_id=console_user_ocid,
+            update_user_capabilities_details=identity_models.UpdateUserCapabilitiesDetails(
+                can_use_console_password=True))
+    except Exception as capability_enable_err:
+        exit_handler("Could not enable UIPassword Capability : {}".format(
+            capability_enable_err), 1, logger)
+
+def reset_uipassword(identity_client, console_user_ocid):
+    try:
+        identity_client.create_or_reset_ui_password(user_id=console_user_ocid)
+    except Exception as uipassword_reset_err:
+        exit_handler("Could not reset UIPassword: {}".format(
+            uipassword_reset_err), 1, logger)
+
+def set_uipassword_capability_to_false(identity_client, console_user_ocid):
+    try:
+        identity_client.update_user_capabilities(
+            user_id=console_user_ocid,
+            update_user_capabilities_details=identity_models.UpdateUserCapabilitiesDetails(
+                can_use_console_password=False))
+    except Exception as capability_disable_err:
+        exit_handler("Could not disable UIPassword Capability : {}".format(
+            capability_disable_err), 1, logger)
+#+end_src
+
+** What is opc-retry-token?
+<2022-03-01 Tue>
+https://docs.oracle.com/en-us/iaas/Content/API/Concepts/usingapi.htm
+
+
+Retry Token
+
+For some operations you can provide a unique retry token (opc-retry-token) so the request can be retried in case of a timeout or server error without the risk of executing that same action again. The token expires after 24 hours, but can be invalidated before then due to conflicting operations (for example, if a resource has been deleted and purged from the system, then a retry of the original creation request may be rejected).
+
+*** another definition
+#    * opc_retry_token (Optional)
+#          A token that uniquely identifies a request so it can be retried in case of a timeout or server error
+#          without risk of executing that same action again. Retry tokens expire after 24 hours, but can be
+#          invalidated before then due to conflicting operations
+
+
+*** why "example value"?
+    opc_request_id="EG7ZGB09J2PRP988HGRV<unique_ID>",
+    opc_retry_token="EXAMPLE-opcRetryToken-Value")
+
+
+*** what is retry strategy?
+from oci import retry, circuit_breaker  
+
+https://docs.oracle.com/en-us/iaas/tools/python/2.58.0/sdk_behaviors/retries.html
+
+**** sample
+https://github.com/oracle/oci-python-sdk/blob/master/examples/retries.py
+
+
+**** it looks like DEFAULT_RETRY_STRATEGY would be sufficient for our use
+
+Default Retry Strategy
+
+The default retry strategy vended by the SDK has the following attributes:
+
+    8 total attempts
+
+    Total allowed elapsed time for all requests of 600 seconds (10 minutes)
+
+    Exponential backoff with de-correlated jitter of 1000 ms, using:
+
+            The base time to use in retry calculations will be 1 second
+            An exponent of 2. When calculating the next retry time we will raise this to the power of the number of attempts
+            A maximum wait time between calls of 30 seconds
+
+    Retries on the following exception types:
+
+            Timeouts and connection errors
+            HTTP 409 (IncorrectState)
+            HTTP 429s (throttles)
+            HTTP 5xx (server errors), except 501
+
+***** oci.retry.DEFAULT_RETRY_STRATEGY)
+

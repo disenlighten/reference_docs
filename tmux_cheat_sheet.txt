@@ -24,3 +24,5 @@ C-b :setw synchronize-panes
 tmux kill-session -a - kill all sessions but the current one
 tmux a -t $SESSIONNAME - attach to a session
 
+* Session within a session
+C-b C-b d # detach
