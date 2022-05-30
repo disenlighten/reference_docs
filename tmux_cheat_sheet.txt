@@ -18,17 +18,9 @@ C-b (#) - move to the tab with number equal to (#) (e.g. 0 to go to the first ta
 C-b x - close a tab  (hit y and Enter to confirm closing of this tab.)
 
 ### conf settings
-<<<<<<< Updated upstream
-# Type in all panes
-bind C-b setw synchronize-panes
-
-# kill a session
-tmux kill-session -t mysession
-=======
 # Type in all panes (type again to toggle off)
 C-b :setw synchronize-panes
 
 tmux kill-session -a - kill all sessions but the current one
 tmux a -t $SESSIONNAME - attach to a session
 
->>>>>>> Stashed changes
