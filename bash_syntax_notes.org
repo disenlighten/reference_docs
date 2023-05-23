@@ -162,3 +162,34 @@ Dockerfile execution exit the build process
 because of the ||
 
 if either the commands exits 0, mkdir /var/log/tmp  or true , then it will work
+
+* Check if a file or directory exists
+
+#+begin_src bash
+FILE=/etc/docker
+if [ -d "$FILE" ]; then
+    echo "$FILE is a directory."
+fi
+#+end_src
+
+#+begin_src bash
+FILE=/etc/resolv.conf
+if [ -f "$FILE" ]; then
+    echo "$FILE exists."
+else 
+    echo "$FILE does not exist."
+fi
+#+end_src
+
+* Iterative over key, value pairs in bash
+
+The keys are accessed using an exclamation point: ${!array[@]}, the values are accessed using ${array[@]}.
+
+declare -A REGION_INFO=([yny]=ap-chuncheon-1
+[hyd]=ap-hyderabad-1
+[mel]=ap-melbourne-1
+[bom]=ap-mumbai-1
+[kix]=ap-osaka-1
+[icn]=ap-seoul-1)
+
+for i in "${!REGION_INFO[@]}"; do oci --profile "${PROFILE}" --region "${i}" os bucket delete --namespace ${NAMESPACE} --bucket-name "${REGION_INFO[$i]}--OracleLinux-OL8-unused-x86_64" --empty --force; done
