@@ -40,5 +40,9 @@ C-b :setw synchronize-panes
 #+end_src
 ** C-b PgUp - Enter copy mode to Scroll up (q to quit)
 
+* Movement
+** Scroll
+*** C-b PgUp (q to quit)
+
 
 

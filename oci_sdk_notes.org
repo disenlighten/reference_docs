@@ -182,9 +182,31 @@ Host: <managementEndpoint>
 
 # Sorry, we do not have a Python SDK example for this request.
 
+**** Create secrets python
+https://docs.oracle.com/en-us/iaas/api/#/en/secretmgmt/20180608/datatypes/CreateSecretDetails
+https://docs.oracle.com/en-us/iaas/api/#/en/secretmgmt/20180608/datatypes/SecretContentDetails
+
+create_secret_response = vault_client.create_secret(
+    create_secret_details=vault_models.CreateSecretDetails(
+        compartment_id=compartment_id,
+        secret_content=vault_models.Base64SecretContentDetails(
+            content_type="BASE64",
+            name="my_new_test_secret",
+            stage="CURRENT",
+            content="EXAMPLE-content-Value"),
+        secret_name="my_new_test_secret",
+        vault_id=vault_ocid,
+        description="test secret created with SDK",
+        key_id=key_ocid)
 
 
+# Get the data from response
+print(create_secret_response.data)
 
+***** will need to get the vault id with RQS
+Will need key id also?
+
+*** List secret versions contd.
 def list_secret_version(vault_client, secret_id):
     list_version_response = vault_client.list_secret_versions(secret_id)
     return list_version_response

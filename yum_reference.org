@@ -31,6 +31,8 @@ yum provides /var/www/html
 yum whatprovides ssh
 #+end_src
 
+
+
 ** Location of repos
 /etc/yum.repos.d/*
 
@@ -158,7 +160,7 @@ enabled=1 # or true
 mv longname_blah_blah_blah.repo shortname.repo
 #+end_src
 **** change heading and name in file to the shortname
-**** yum repolist oowill show you the new repo
+**** yum repolist will show you the new repo
 
 * Misc
 ** Oracle Linux Vagrant boxes
@@ -171,3 +173,9 @@ vagrant up
 vagrant ssh
 #+end_src
 
+
+* Checking Dependencies
+** yum deplist
+*** gives what _this_ package depends on
+** repoquery --whatrequires 
+*** shows what pacakages depend on this package
