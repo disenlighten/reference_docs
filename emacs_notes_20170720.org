@@ -32,6 +32,7 @@ Had to set in iterm2 - profile -> keys - option key act as Esc+
 - Delete whole line from anywhere in line :: C-D 
 - Delete from point to the start of the line :: C-0 C-k
 - Split the line at point :: C-o
+- Zap to character :: M-z
 * Meta
 - Undo :: u -> C-x u
 - Quit out of a command in progress :: C-g
@@ -57,6 +58,8 @@ Had to set in iterm2 - profile -> keys - option key act as Esc+
 - Start Org Mode :: M-x org-mode
 - Create a TODO :: add the TODO keyword in a headline
 - Solve a TODO item  :: C-c C-t
+- Archive a TODO item :: C-c C-x C-a
+- Change status of TODO :: Shift-<right>
 - Create a heading :: M-shift-RET  
 - Create a link :: [[https://orgmode.org/guide/Hyperlinks.html][Org Mode Hyperlinks]]
 - Open at point :: C-c C-o
@@ -72,6 +75,8 @@ Had to set in iterm2 - profile -> keys - option key act as Esc+
 - =code=
 - ~verbatim~
 - +strike-through+
+** org-capture
+ - Start a capture :: C-c c
 * BASH-specific
 - Backward :: C-b
 - Forward :: C-f
