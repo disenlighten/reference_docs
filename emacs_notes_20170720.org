@@ -25,6 +25,7 @@ Had to set in iterm2 - profile -> keys - option key act as Esc+
 - Kill the next word after the cursor ::  M-d
 - Kill from the cursor position to end of line :: d$, yy -> C-k          
 - Kill to the end of the current sentence :: M-k  
+- Kill to start of line :: C-0 C-k
 - Kill everything between 2 positions  :: C-w       
 - Paste killed text ("Yank" in emacs parlance") :: p -> C-y 
 - Kill 5 lines :: 5dd -> C-u 5 C-k
@@ -32,6 +33,7 @@ Had to set in iterm2 - profile -> keys - option key act as Esc+
 - Delete whole line from anywhere in line :: C-D 
 - Delete from point to the start of the line :: C-0 C-k
 - Split the line at point :: C-o
+- Join a line to a pervious line :: M-^
 - Zap to character :: M-z
 * Meta
 - Undo :: u -> C-x u
